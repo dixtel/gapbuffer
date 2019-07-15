@@ -1,8 +1,10 @@
 from enum import Enum
 
+
 class CellType(Enum):
     GAP = 1
     ENDFILE = 2
+
 
 class GapBuffor:
     def __init__(self):
@@ -10,7 +12,7 @@ class GapBuffor:
         self.buffor = [CellType.GAP] * self.gap_size
         self.current_gap_size = self.gap_size
         self.cursor = 0
-    
+
     def write(self, text: str) -> None:
         for ch in text:
             self.buffor[self.cursor] = ch
@@ -22,10 +24,13 @@ class GapBuffor:
                 self.current_gap_size = self.gap_size
                 self.buffor += [CellType.GAP] * self.gap_size
                 for i in range((last_index + 1) - self.cursor):
-                    self.buffor[last_index - i], self.buffor[last_index + self.gap_size - i] = self.buffor[last_index + self.gap_size - i], self.buffor[last_index - i]
+                    start = last_index - i
+                    end = last_index + self.gap_size - i
+                    self.buffor[start], self.buffor[end] = self.buffor[end], self.buffor[start]
 
     def move_cursor(self, x: int) -> None:
-        if x == 0: return
+        if x == 0:
+            return
         elif x > 0:
             missed_space = self.cursor + self.current_gap_size + x - len(self.buffor)
             if missed_space > 0:
@@ -54,8 +59,9 @@ class GapBuffor:
         if amount > 0:
             self.buffor = self.buffor[:max(self.cursor - amount, 0)] + self.buffor[self.cursor:]
             self.cursor -= amount
-            if self.cursor < 0: self.cursor = 0
-                
+            if self.cursor < 0:
+                self.cursor = 0
+
     def get_char(self, index: int) -> None:
         if index == len(self.buffor):
             return CellType.ENDFILE

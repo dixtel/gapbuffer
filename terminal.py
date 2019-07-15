@@ -7,19 +7,20 @@ from gapbuffer import GapBuffor, CellType
 from typing import List, Optional
 
 
-WORKING_DIR = os.path.dirname(os.path.abspath(__file__)) 
+WORKING_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 class TerminalButton():
-    def __init__(self, text: str, pos: List[int], width: Optional[int]=None, height: Optional[int]=None):
-        self.pos = pos 
+    def __init__(self, text: str, pos: List[int], width: Optional[int] = None, height: Optional[int] = None):
+        self.pos = pos
         self.width = width
         self.height = height
         self.font = pygame.font.Font(os.path.join(WORKING_DIR, 'font/Roboto-Regular.ttf'), 16)
         self.text_surface = self.font.render(text, True, (255, 255, 255))
-        
-        if width == None:
+
+        if width is None:
             self.width = self.text_surface.get_rect().width
-        if height == None:
+        if height is None:
             self.height = self.text_surface.get_rect().height
         self.rect = pygame.Rect(pos[0], pos[1], self.width, self.height)
 
@@ -50,6 +51,7 @@ class TerminalButton():
             pygame.draw.rect(window, (0, 150 if self.hover else 100, 0), self.rect)
         window.blit(self.text_surface, self.text_surface.get_rect(center=(self.pos[0] + self.width//2, self.pos[1] + self.height//2)))
 
+
 class Terminal:
     def __init__(self):
         self.menu_height = 100
@@ -75,16 +77,16 @@ class Terminal:
         clock = pygame.time.Clock()
         run = True
         while run:
-            events = pygame.event.get()git push
+            events = pygame.event.get()
             for e in events:
-                if e.type == pygame.QUIT: 
+                if e.type == pygame.QUIT:
                     run = False
                 if e.type == pygame.KEYDOWN:
-                    if e.key == pygame.K_RIGHT: 
+                    if e.key == pygame.K_RIGHT:
                         self.buffor.move_cursor(1)
-                    elif e.key == pygame.K_LEFT: 
+                    elif e.key == pygame.K_LEFT:
                         self.buffor.move_cursor(-1)
-                    elif e.key == pygame.K_BACKSPACE: 
+                    elif e.key == pygame.K_BACKSPACE:
                         self.buffor.delete(1)
                     else:
                         self.buffor.write(e.unicode)
@@ -117,15 +119,17 @@ class Terminal:
                             char = self.buffor.get_char(buffor_index)
 
                             if self.buffor.cursor == buffor_index:
-                                pygame.draw.line(window, (255, 255, 255), 
-                                        (pos[0] + 1, pos[1] + 1), 
-                                        (pos[0] + 1, pos[1] + self.cell_size - 1))
+                                pygame.draw.line(
+                                    window, (255, 255, 255),
+                                    (pos[0] + 1, pos[1] + 1),
+                                    (pos[0] + 1, pos[1] + self.cell_size - 1)
+                                )
 
                             if self.debug_mode and char == CellType.GAP:
                                 char = ''
                                 break
                             if type(char) == str:
-                                if ord(char) in [10, 13]: # eneter
+                                if ord(char) in [10, 13]:  # eneter
                                     new_line = True
                                 break
                     except IndexError:
@@ -142,13 +146,17 @@ class Terminal:
                     if self.debug_mode:
                         pygame.draw.rect(window, (100, 100, 100), pygame.Rect(pos[0], pos[1], self.cell_size, self.cell_size), 1)
                         if buffor_index in range(self.buffor.cursor, self.buffor.cursor + self.buffor.current_gap_size):
-                            pygame.draw.line(window, (0, 0, 255), 
-                                (pos[0], pos[1] + self.cell_size - 1), 
-                                (pos[0] + self.cell_size, pos[1] + self.cell_size - 1))
+                            pygame.draw.line(
+                                window, (0, 0, 255),
+                                (pos[0], pos[1] + self.cell_size - 1),
+                                (pos[0] + self.cell_size, pos[1] + self.cell_size - 1)
+                            )
                         if buffor_index == self.buffor.cursor:
-                            pygame.draw.line(window, (255, 0, 0), 
-                                (pos[0], pos[1] + self.cell_size - 1), 
-                                (pos[0] + self.cell_size, pos[1] + self.cell_size - 1))
+                            pygame.draw.line(
+                                window, (255, 0, 0),
+                                (pos[0], pos[1] + self.cell_size - 1),
+                                (pos[0] + self.cell_size, pos[1] + self.cell_size - 1)
+                            )
                 if stop_draw:
                     break
 
@@ -175,10 +183,10 @@ class Terminal:
         except FileNotFoundError:
             return False
         return False
-    
+
     def save_file(self) -> bool:
         file = asksaveasfile()
-        if file == None:
+        if file is None:
             return False
         file.write(self.buffor.get_text())
         return True
