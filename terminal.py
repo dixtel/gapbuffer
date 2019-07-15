@@ -165,14 +165,17 @@ class Terminal:
         path = askopenfilename()
         if type(path) != str:
             return False
-        with open(path) as file:
-            try:
-                text = file.read()
-            except UnicodeDecodeError:
-                showinfo('Error', f'Can\'t load {path}')
-                return
-            self.buffor.load(text)
-            return True
+        try:
+            with open(path) as file:
+                try:
+                    text = file.read()
+                except UnicodeDecodeError:
+                    showinfo('Error', f'Can\'t load {path}')
+                    return
+                self.buffor.load(text)
+                return True
+        except FileNotFoundError:
+            return False
         return False
     
     def save_file(self) -> bool:
