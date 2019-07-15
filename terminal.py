@@ -76,8 +76,6 @@ class Terminal:
         run = True
         while run:
             events = pygame.event.get()
-            keys = pygame.key.get_pressed()
-
             for e in events:
                 if e.type == pygame.QUIT: 
                     run = False
