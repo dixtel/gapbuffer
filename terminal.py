@@ -75,7 +75,7 @@ class Terminal:
         clock = pygame.time.Clock()
         run = True
         while run:
-            events = pygame.event.get()
+            events = pygame.event.get()git push
             for e in events:
                 if e.type == pygame.QUIT: 
                     run = False
